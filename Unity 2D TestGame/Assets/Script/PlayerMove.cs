@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    public float maxSpeed;
+    public float maxSpeed; //ìµœëŒ€ ìŠ¤í”¼ë“œ
+    public float jumpPower;
     Rigidbody2D rigid;
     SpriteRenderer spriteRenderer;
     Animator anim;
@@ -16,32 +17,52 @@ public class PlayerMove : MonoBehaviour
     }
     void Update()
     {
-        // Å°º¸µå¿¡¼­ ¼ÕÀ» ¶¼¸é ¼Óµµ¸¦ ±Ş°İÈ÷ ³»¸²
+        // ì í”„
+        if (Input.GetButtonDown("Jump") && !anim.GetBool("isJumping"))
+        {
+            rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+            anim.SetBool("isJumping", true);
+        }
+
+        // í‚¤ë³´ë“œì—ì„œ ì†ì„ ë–¼ë©´ ì†ë„ë¥¼ ê¸‰ê²©íˆ ë‚´ë¦¼
         if (Input.GetButtonUp("Horizontal"))
         {
             rigid.velocity = new Vector2(rigid.velocity.normalized.x * 0.5f, rigid.velocity.y);
         }
 
-        // ¹æÇâÀüÈ¯(Direction Sprite)        
+        // ë°©í–¥ì „í™˜(Direction Sprite)        
         if (Input.GetButton("Horizontal"))
-            spriteRenderer.flipX = Input.GetAxisRaw("Horizontal") == -1; //¿ŞÂÊÅ° ´©¸£¸é filpX¸¦ ÄÔ (fipX´Â XÃà ¹İÀü)
+            spriteRenderer.flipX = Input.GetAxisRaw("Horizontal") == -1; //ì™¼ìª½í‚¤ ëˆ„ë¥´ë©´ filpXë¥¼ ì¼¬ (fipXëŠ” Xì¶• ë°˜ì „)
 
-        // ¿òÁ÷ÀÌ°Å³ª Á¤Áö½Ã ¾Ö´Ï¸ŞÀÌ¼Ç
-        if (Mathf.Abs(rigid.velocity.x) < 0.3) //¼Óµµ°¡ 0.3 ÀÌÇÏ·Î ³»·Á°¡¸é
-            anim.SetBool("isWalking", false); //¾Ö´Ï¸ŞÀÌÅÍÀÇ isWalking ÆÄ¶ó¹ÌÅÍ¸¦ ²û
+        // ì›€ì§ì´ê±°ë‚˜ ì •ì§€ì‹œ ì• ë‹ˆë©”ì´ì…˜
+        if (Mathf.Abs(rigid.velocity.x) < 0.3) //ì†ë„ê°€ 0.3 ì´í•˜ë¡œ ë‚´ë ¤ê°€ë©´
+            anim.SetBool("isWalking", false); //ì• ë‹ˆë©”ì´í„°ì˜ isWalking íŒŒë¼ë¯¸í„°ë¥¼ ë”
         else
-            anim.SetBool("isWalking", true); //¾Ö´Ï¸ŞÀÌÅÍÀÇ isWalking ÆÄ¶ó¹ÌÅÍ¸¦ ÄÔ
+            anim.SetBool("isWalking", true); //ì• ë‹ˆë©”ì´í„°ì˜ isWalking íŒŒë¼ë¯¸í„°ë¥¼ ì¼¬
     }
     void FixedUpdate()
     {
-        // ¿òÁ÷ÀÏ¶§
+        // ì›€ì§ì¼ë•Œ
         float h = Input.GetAxisRaw("Horizontal");
-        rigid.AddForce(Vector2.right * h, ForceMode2D.Impulse); //ÀÔ·ÂµÈ ¹æÇâÀ¸·Î ÈûÀ» ´õÇÔ
+        rigid.AddForce(Vector2.right * h, ForceMode2D.Impulse); //ì…ë ¥ëœ ë°©í–¥ìœ¼ë¡œ í˜ì„ ë”í•¨
 
-        //ÃÖ´ë ½ºÇÇµå ¼³Á¤
-        if(rigid.velocity.x > maxSpeed) //¿À¸¥ÂÊ Max Speed
+        //ìµœëŒ€ ìŠ¤í”¼ë“œ ì„¤ì •
+        if(rigid.velocity.x > maxSpeed) //ì˜¤ë¥¸ìª½ Max Speed
             rigid.velocity = new Vector2(maxSpeed, rigid.velocity.y);
-        else if (rigid.velocity.x < maxSpeed * (-1)) //¿ŞÂÊ Max Speed
+        else if (rigid.velocity.x < maxSpeed * (-1)) //ì™¼ìª½ Max Speed
             rigid.velocity = new Vector2(maxSpeed * (-1), rigid.velocity.y);
+
+        //í”Œë«í¼ì— ë‹¿ì•˜ì„ ë•Œ
+        if (rigid.velocity.y < 0)
+        {
+            Debug.DrawRay(rigid.position, Vector3.down, new Color(0, 1, 0)); //rigid.position ì¦‰ ì˜¤ë¸Œì íŠ¸ì˜ ì¤‘ì‹¬ì—ì„œ ë…¹ìƒ‰ ë ˆì´ì €ë¥¼ ì•„ë˜ë¡œ ì¨
+            /*ì•„ë˜ì˜ RaycastHitì€ ë ˆì´ì €ë¥¼ ì˜ì§€ë§Œ ë³´ì´ì§€ ì•Šê¸° ë•Œë¬¸ì— ìœ„ì˜ ë””ë²„ê·¸ë¥¼ ì´ìš©í•˜ì—¬ ëˆˆì— ë³´ì´ê²Œ í‘œì‹œ*/
+            RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, Vector3.down, 1, LayerMask.GetMask("Platform")); //ë ˆì´ì €ê°€ ì˜¤ë¸Œì íŠ¸ì— ë‹¿ì•˜ì„ ë•Œ
+            if (rayHit.collider != null)
+            { //ë ˆì´ì €ê°€ ì˜¤ë¸Œì íŠ¸ì— ë§ì•˜ì„ë•Œ
+                if (rayHit.distance < 0.5f) // ì˜¤ë¸Œì íŠ¸ì— ë‹¿ì•˜ì„ ë•Œ rayì˜ ê¸¸ì´ê°€ 0.5ì´í•˜ê°€ ë˜ë©´(0.5ëŠ” í”Œë ˆì´ì–´ì˜ collider ê¸¸ì´ì˜ ì ˆë°˜)
+                    anim.SetBool("isJumping", false);
+            }
+        }
     }
 }

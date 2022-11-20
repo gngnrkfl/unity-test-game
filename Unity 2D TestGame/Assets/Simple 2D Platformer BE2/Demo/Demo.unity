@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 96321230}
   - component: {fileID: 96321229}
   - component: {fileID: 96321231}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Top Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -245,7 +245,7 @@ GameObject:
   - component: {fileID: 116220902}
   - component: {fileID: 116220901}
   - component: {fileID: 116220900}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Top (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -418,7 +418,7 @@ GameObject:
   - component: {fileID: 438758076}
   - component: {fileID: 438758075}
   - component: {fileID: 438758074}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Top (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -529,7 +529,7 @@ GameObject:
   - component: {fileID: 455487979}
   - component: {fileID: 455487978}
   - component: {fileID: 455487977}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Top (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -665,7 +665,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 2
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 4
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -731,7 +731,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 608370869}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.14, y: 2.05, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -771,6 +771,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 3
+  jumpPower: 20
 --- !u!70 &608370876
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -798,7 +799,7 @@ GameObject:
   - component: {fileID: 631793042}
   - component: {fileID: 631793041}
   - component: {fileID: 631793040}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Top (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -909,7 +910,7 @@ GameObject:
   - component: {fileID: 721113250}
   - component: {fileID: 721113249}
   - component: {fileID: 721113248}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Top (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1020,7 +1021,7 @@ GameObject:
   - component: {fileID: 794900412}
   - component: {fileID: 794900411}
   - component: {fileID: 794900413}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Top Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1131,7 +1132,7 @@ GameObject:
   - component: {fileID: 841991912}
   - component: {fileID: 841991911}
   - component: {fileID: 841991910}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Top (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1358,7 +1359,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!70 &879173714
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1386,6 +1387,7 @@ GameObject:
   - component: {fileID: 880673739}
   - component: {fileID: 880673738}
   - component: {fileID: 880673737}
+  - component: {fileID: 880673740}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: Untagged
@@ -1459,6 +1461,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &880673740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 880673736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a160d838ff8b4b4693ac20007e008c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AssetsPPU: 16
+  m_RefResolutionX: 320
+  m_RefResolutionY: 180
+  m_UpscaleRT: 1
+  m_PixelSnapping: 0
+  m_CropFrameX: 0
+  m_CropFrameY: 0
+  m_StretchFill: 0
 --- !u!1 &926269922
 GameObject:
   m_ObjectHideFlags: 0
@@ -1592,7 +1614,7 @@ GameObject:
   - component: {fileID: 993453090}
   - component: {fileID: 993453089}
   - component: {fileID: 993453088}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Top (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1703,7 +1725,7 @@ GameObject:
   - component: {fileID: 1456270255}
   - component: {fileID: 1456270254}
   - component: {fileID: 1456270253}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1814,7 +1836,7 @@ GameObject:
   - component: {fileID: 1994570251}
   - component: {fileID: 1994570250}
   - component: {fileID: 1994570249}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Top (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1925,7 +1947,7 @@ GameObject:
   - component: {fileID: 2085563583}
   - component: {fileID: 2085563582}
   - component: {fileID: 2085563581}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Top (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
