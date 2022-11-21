@@ -65,4 +65,39 @@ public class PlayerMove : MonoBehaviour
             }
         }
     }
+
+    // 다른 오브젝트와 충돌하는지 체크
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Enemy") //충돌한 오브젝트의 tag가 Enemy라면
+        {
+            OnDamaged(collision.transform.position);
+        }
+    }
+
+    // 대미지를 입었을 때
+    void OnDamaged(Vector2 targetPos)
+    {
+        // 레이어를 바꿈 (무적상태)
+        gameObject.layer = 9;
+
+        // 투명화
+        spriteRenderer.color = new Color(1, 1, 1, 0.4f);
+
+        // 튕겨져 나감
+        int dirc = transform.position.x - targetPos.x > 0 ? 1 : -1;
+        rigid.AddForce(new Vector2(dirc, 1) * 10, ForceMode2D.Impulse);
+
+        //애니메이션
+        anim.SetTrigger("Damaged");
+
+        Invoke("OffDamaged", 2); //무적시간 종료
+    }
+
+    // 대미지를 회복함
+    void OffDamaged()
+    {
+        gameObject.layer = 8; //레이어 변경 (기본상태)
+        spriteRenderer.color = new Color(1, 1, 1, 1);
+    }
 }
