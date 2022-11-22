@@ -9,11 +9,13 @@ public class EnemyMove : MonoBehaviour
     public int nextmove;
     Animator anim;
     SpriteRenderer spriteRenderer;
+    CapsuleCollider2D colli;
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        colli = GetComponent<CapsuleCollider2D>();
         Invoke("Think", 5); //"함수이름"을 5초후에 호출
     }
 
@@ -55,5 +57,24 @@ public class EnemyMove : MonoBehaviour
         spriteRenderer.flipX = nextmove == 1;
         CancelInvoke(); //작동중인 Invoke를 멈춤
         Invoke("Think", 2);
+    }
+
+    public void OnDamaged()
+    {
+        // 스프라이트 색
+        spriteRenderer.color = new Color(1, 1, 1, 0.4f);
+        // 스프라이트 flipY
+        spriteRenderer.flipY = true;
+        // Collider 비활성화
+        colli.enabled = false;
+        // 죽는 효과
+        rigid.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
+        // 완전 비활성화
+        Invoke("DeActive", 5);
+    }
+
+    void DeActive()
+    {
+        gameObject.SetActive(false);
     }
 }

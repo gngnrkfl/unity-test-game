@@ -1,19 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+//using System.Drawing;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
+    public GameManager manager;
     public float maxSpeed; //최대 스피드
     public float jumpPower;
     Rigidbody2D rigid;
     SpriteRenderer spriteRenderer;
     Animator anim;
+    CapsuleCollider2D playercolli;
+
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        playercolli= GetComponent<CapsuleCollider2D>();
     }
     void Update()
     {
@@ -66,18 +71,71 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    // 다른 오브젝트와 충돌하는지 체크
+    /* 다른 오브젝트와 충돌하는지 체크(물리적 첩촉)
+     OnCollisionEnter2D : 2개의 충돌체의 isTrigger가 꺼져 있으면 호출=>물리적 접촉시 */
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Enemy") //충돌한 오브젝트의 tag가 Enemy라면
         {
-            OnDamaged(collision.transform.position);
+            // 몬스터 공격
+            if(rigid.velocity.y < 0 && transform.position.y > collision.transform.position.y)
+            {
+                OnAttack(collision.transform);
+            }
+            else //공격 당함
+                OnDamaged(collision.transform.position);
         }
+    }
+
+    /* OnTriggerEnter2D : 2개중 하나의 충돌체의 isTrigger가 켜져 있으면 호출 
+    =>물리적 접촉이 아닌 통과될때 (오브젝트에 isTrigger 체크해야함!)*/
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Item") //동전과 닿았을 때
+        {
+            // 점수획득
+            bool isBronze = collision.gameObject.name.Contains("Bronze"); //Bronze라는 단어를 포함하고 있는가
+            bool isSilver = collision.gameObject.name.Contains("Silver"); //Silver라는 단어를 포함하고 있는가
+            bool isGold = collision.gameObject.name.Contains("Gold"); //Gold라는 단어를 포함하고 있는가
+            
+            if (isBronze)
+                manager.stagePoint += 50;
+            else if (isSilver)
+                manager.stagePoint += 100;
+            else if (isGold)
+                manager.stagePoint += 200;
+
+            // 아이템 제거
+            collision.gameObject.SetActive(false);
+        }
+        else if (collision.gameObject.tag == "Finish")
+        {
+            manager.NextStage();
+            // 다음 스테이지로
+
+        }
+    }
+
+    // 적을 공격했을 때
+    void OnAttack(Transform enemy)
+    {
+        // 점수 획득
+        manager.stagePoint += 100;
+
+        // 적을 밟을 때 반발력
+        rigid.AddForce(Vector2.up * 10, ForceMode2D.Impulse);
+
+        // EnemyMove 파일의 객체를 생성 후 OnDamaged() 함수 실행
+        EnemyMove enemyMove = enemy.GetComponent<EnemyMove>();
+        enemyMove.OnDamaged();
     }
 
     // 대미지를 입었을 때
     void OnDamaged(Vector2 targetPos)
     {
+        // 체력 감소
+        manager.HealthDown();
+
         // 레이어를 바꿈 (무적상태)
         gameObject.layer = 9;
 
@@ -99,5 +157,22 @@ public class PlayerMove : MonoBehaviour
     {
         gameObject.layer = 8; //레이어 변경 (기본상태)
         spriteRenderer.color = new Color(1, 1, 1, 1);
+    }
+
+    public void OnDie()
+    {
+        // 스프라이트 색
+        spriteRenderer.color = new Color(1, 1, 1, 0.4f);
+        // 스프라이트 flipY
+        spriteRenderer.flipY = true;
+        // Collider 비활성화
+        playercolli.enabled= false;
+        // 죽는 효과
+        rigid.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
+    }
+
+    public void VeloctyZero() //속도 초기화
+    {
+        rigid.velocity = Vector2.zero;
     }
 }
